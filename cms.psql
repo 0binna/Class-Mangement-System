@@ -1,0 +1,38 @@
+-- Database: cms_db
+
+COPY student(name, email, image_link) FROM stdin (DELIMITER ',');
+Lunea Hicks,nullam@icloud.couk,https://cdn.pixabay.com/photo/2016/08/08/09/17/avatar-1577909_960_720.png
+Samuel Yates,dictum@hotmail.org,https://cdn.pixabay.com/photo/2016/08/08/09/17/avatar-1577909_960_720.png
+Cecilia Alford,aenean@google.edu,https://cdn.pixabay.com/photo/2016/08/08/09/17/avatar-1577909_960_720.png
+Paul Freeman,donec@outlook.com,https://cdn.pixabay.com/photo/2016/08/08/09/17/avatar-1577909_960_720.png
+Roanna Chapman,erat@protonmail.org,https://cdn.pixabay.com/photo/2016/08/08/09/17/avatar-1577909_960_720.png
+Bryar Gonzales,vitae.aliquet@outlook.org,https://cdn.pixabay.com/photo/2016/08/08/09/17/avatar-1577909_960_720.png
+Laurel Richards,iaculis.odio.nam@google.com,https://cdn.pixabay.com/photo/2016/08/08/09/17/avatar-1577909_960_720.png
+Nyssa Trujillo,mus@hotmail.com,https://cdn.pixabay.com/photo/2016/08/08/09/17/avatar-1577909_960_720.png
+Britanni Hooper,consectetuer@google.org,https://cdn.pixabay.com/photo/2016/08/08/09/17/avatar-1577909_960_720.png
+Shay Padilla,lectus.quis@outlook.ca,https://cdn.pixabay.com/photo/2016/08/08/09/17/avatar-1577909_960_720.png
+\.
+
+COPY instructor(name, email, image_link) FROM stdin (DELIMITER ',');
+Beau Olson,ut.nec.urna@hotmail.ca,https://cdn.pixabay.com/photo/2016/08/08/09/17/avatar-1577909_960_720.png
+Susan Moreno,eros.non@aol.org,https://cdn.pixabay.com/photo/2016/08/08/09/17/avatar-1577909_960_720.png
+Preston Horne,cras.vehicula@yahoo.ca,https://cdn.pixabay.com/photo/2016/08/08/09/17/avatar-1577909_960_720.png
+Demetrius Potter,at.arcu.vestibulum@yahoo.org,https://cdn.pixabay.com/photo/2016/08/08/09/17/avatar-1577909_960_720.png
+Luke Harrell,condimentum.eget@aol.couk,https://cdn.pixabay.com/photo/2016/08/08/09/17/avatar-1577909_960_720.png
+\.
+
+COPY course(title, credit, instructor_id) FROM stdin (DELIMITER ',');
+Mathematics,3,1
+English,3,2
+Science,3,3
+Physical Education,3,4
+Social Studies,3,5
+\.
+
+COPY grade(score, course_id, student_id) FROM stdin (DELIMITER ',');
+85,1,2
+90,2,1
+91,3,3
+75,4,5
+99,5,4
+\.
