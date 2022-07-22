@@ -1,38 +1,38 @@
 -- Database: cms_db
 
-COPY student(name, email, image_link) FROM stdin (DELIMITER ',');
-Lunea Hicks,nullam@icloud.couk,https://cdn.pixabay.com/photo/2016/08/08/09/17/avatar-1577909_960_720.png
-Samuel Yates,dictum@hotmail.org,https://cdn.pixabay.com/photo/2016/08/08/09/17/avatar-1577909_960_720.png
-Cecilia Alford,aenean@google.edu,https://cdn.pixabay.com/photo/2016/08/08/09/17/avatar-1577909_960_720.png
-Paul Freeman,donec@outlook.com,https://cdn.pixabay.com/photo/2016/08/08/09/17/avatar-1577909_960_720.png
-Roanna Chapman,erat@protonmail.org,https://cdn.pixabay.com/photo/2016/08/08/09/17/avatar-1577909_960_720.png
-Bryar Gonzales,vitae.aliquet@outlook.org,https://cdn.pixabay.com/photo/2016/08/08/09/17/avatar-1577909_960_720.png
-Laurel Richards,iaculis.odio.nam@google.com,https://cdn.pixabay.com/photo/2016/08/08/09/17/avatar-1577909_960_720.png
-Nyssa Trujillo,mus@hotmail.com,https://cdn.pixabay.com/photo/2016/08/08/09/17/avatar-1577909_960_720.png
-Britanni Hooper,consectetuer@google.org,https://cdn.pixabay.com/photo/2016/08/08/09/17/avatar-1577909_960_720.png
-Shay Padilla,lectus.quis@outlook.ca,https://cdn.pixabay.com/photo/2016/08/08/09/17/avatar-1577909_960_720.png
+COPY student(id, name, email, image_link) FROM stdin (DELIMITER ',');
+22001,Lunea Hicks,nullam@student.com,https://cdn.pixabay.com/photo/2016/08/08/09/17/avatar-1577909_960_720.png
+22002,Samuel Yates,dictum@student.com,https://cdn.pixabay.com/photo/2016/08/08/09/17/avatar-1577909_960_720.png
+22003,Cecilia Alford,aenean@student.com,https://cdn.pixabay.com/photo/2016/08/08/09/17/avatar-1577909_960_720.png
+22004,Paul Freeman,donec@student.com,https://cdn.pixabay.com/photo/2016/08/08/09/17/avatar-1577909_960_720.png
+22005,Roanna Chapman,erat@pstudent.com,https://cdn.pixabay.com/photo/2016/08/08/09/17/avatar-1577909_960_720.png
+22006,Bryar Gonzales,vitae.aliquet@student.com,https://cdn.pixabay.com/photo/2016/08/08/09/17/avatar-1577909_960_720.png
+22007,Laurel Richards,iaculis.odio.nam@student.com,https://cdn.pixabay.com/photo/2016/08/08/09/17/avatar-1577909_960_720.png
+22008,Nyssa Trujillo,mus@student.com,https://cdn.pixabay.com/photo/2016/08/08/09/17/avatar-1577909_960_720.png
+22009,Britanni Hooper,consectetuer@student.com,https://cdn.pixabay.com/photo/2016/08/08/09/17/avatar-1577909_960_720.png
+22100,Shay Padilla,lectus.quis@student.com,https://cdn.pixabay.com/photo/2016/08/08/09/17/avatar-1577909_960_720.png
 \.
 
-COPY instructor(name, email, image_link) FROM stdin (DELIMITER ',');
-Beau Olson,ut.nec.urna@hotmail.ca,https://cdn.pixabay.com/photo/2016/08/08/09/17/avatar-1577909_960_720.png
-Susan Moreno,eros.non@aol.org,https://cdn.pixabay.com/photo/2016/08/08/09/17/avatar-1577909_960_720.png
-Preston Horne,cras.vehicula@yahoo.ca,https://cdn.pixabay.com/photo/2016/08/08/09/17/avatar-1577909_960_720.png
-Demetrius Potter,at.arcu.vestibulum@yahoo.org,https://cdn.pixabay.com/photo/2016/08/08/09/17/avatar-1577909_960_720.png
-Luke Harrell,condimentum.eget@aol.couk,https://cdn.pixabay.com/photo/2016/08/08/09/17/avatar-1577909_960_720.png
+COPY instructor(id, name, email, image_link) FROM stdin (DELIMITER ',');
+2201,Beau Olson,ut.nec.urna@instructor.com,https://cdn.pixabay.com/photo/2016/08/08/09/17/avatar-1577909_960_720.png
+2202,Susan Moreno,eros.non@instructor.com,https://cdn.pixabay.com/photo/2016/08/08/09/17/avatar-1577909_960_720.png
+2203,Preston Horne,cras.vehicula@instructor.com,https://cdn.pixabay.com/photo/2016/08/08/09/17/avatar-1577909_960_720.png
+2204,Demetrius Potter,at.arcu.vestibulum@instructor.com,https://cdn.pixabay.com/photo/2016/08/08/09/17/avatar-1577909_960_720.png
+2205,Luke Harrell,condimentum.eget@instructor.com,https://cdn.pixabay.com/photo/2016/08/08/09/17/avatar-1577909_960_720.png
 \.
 
-COPY course(title, credit, instructor_id) FROM stdin (DELIMITER ',');
-Mathematics,3,1
-English,3,2
-Science,3,3
-Physical Education,3,4
-Social Studies,3,5
+COPY course(id, title, credit, instructor_id) FROM stdin (DELIMITER ',');
+101,Mathematics,3,2201
+102,English,3,2202
+103,Science,3,2203
+104,Physical Education,3,2204
+105,Social Studies,3,2205
 \.
 
 COPY grade(score, course_id, student_id) FROM stdin (DELIMITER ',');
-85,1,2
-90,2,1
-91,3,3
-75,4,5
-99,5,4
+85,101,22001
+90,102,22002
+91,103,22003
+75,104,22004
+99,105,22005
 \.

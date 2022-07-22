@@ -1,4 +1,3 @@
-import email
 import os
 from sqlalchemy import Column, String, Integer, ForeignKey, UniqueConstraint
 from sqlalchemy.orm import relationship
@@ -161,6 +160,8 @@ class Course(db.Model):
 
 
 # creates Grade table
+# The table "Grade" is a an association object, it establishes a many to
+# many relationship between Course and Student table
 class Grade(db.Model):
     __tablename__ = 'grade'
     __table_args__ = (
