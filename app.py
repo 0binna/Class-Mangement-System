@@ -51,15 +51,15 @@ def create_app(test_config=None):
     # 10 students)
     def retrieve_students(payload):
         selection = Student.query.order_by(Student.name).all()
-        student_details = paginate_data(request, selection)
+        students = paginate_data(request, selection)
 
-        if len(student_details) == 0:
+        if len(students) == 0:
             abort(404)
 
         return jsonify(
             {
                 "success": True,
-                "student_details": student_details
+                "students": students
             }
         )
 
@@ -90,7 +90,7 @@ def create_app(test_config=None):
             )
 
         except BaseException:
-            abort(422)
+            abort(404)
 
     @app.route("/students/<int:student_id>/create", methods=['POST'])
     @requires_auth("post:student_create")
@@ -113,6 +113,7 @@ def create_app(test_config=None):
 
             return jsonify(
                 {
+                    "course": course_input,
                     "success": True
                 }
             )
@@ -132,12 +133,12 @@ def create_app(test_config=None):
             formatted_input = '%{0}%'.format(search_term)
             selection = Student.query.filter(
                 Student.name.ilike(formatted_input)).all()
-            student_details = [student.short() for student in selection]
+            students = [student.short() for student in selection]
 
             return jsonify(
                 {
                     "success": True,
-                    "student_details": student_details
+                    "students": students
                 }
             )
 
@@ -226,15 +227,15 @@ def create_app(test_config=None):
     # (every 10 instructors)
     def retrieve_instructors(payload):
         selection = Instructor.query.order_by(Instructor.name).all()
-        Instructor_details = paginate_data(request, selection)
+        instructors = paginate_data(request, selection)
 
-        if len(Instructor_details) == 0:
+        if len(instructors) == 0:
             abort(404)
 
         return jsonify(
             {
                 "success": True,
-                "student_details": Instructor_details
+                "instructors": instructors
             }
         )
 
@@ -264,7 +265,7 @@ def create_app(test_config=None):
             )
 
         except BaseException:
-            abort(422)
+            abort(404)
 
     @app.route('/instructors/search', methods=['POST'])
     @requires_auth("post:instructor_search")
@@ -278,13 +279,13 @@ def create_app(test_config=None):
             formatted_input = '%{0}%'.format(search_term)
             selection = Instructor.query.filter(
                 Instructor.name.ilike(formatted_input)).all()
-            instructor_details = [instructor.short()
-                                  for instructor in selection]
+            instructors = [instructor.short()
+                           for instructor in selection]
 
             return jsonify(
                 {
                     "success": True,
-                    "student_details": instructor_details
+                    "instructors": instructors
                 }
             )
 
@@ -319,9 +320,9 @@ def create_app(test_config=None):
             "message": "resource not found"
         }), 404
 
-    # Error handlers for all expected Auth error
 
     @app.errorhandler(AuthError)
+    # Error handler for all expected Auth error
     def handle_auth_error(ex):
         response = jsonify(ex.error)
         return response, ex.status_code

@@ -1,0 +1,399 @@
+--
+-- PostgreSQL database dump
+--
+
+-- Dumped from database version 14.2
+-- Dumped by pg_dump version 14.2
+
+SET statement_timeout = 0;
+SET lock_timeout = 0;
+SET idle_in_transaction_session_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SELECT pg_catalog.set_config('search_path', '', false);
+SET check_function_bodies = false;
+SET xmloption = content;
+SET client_min_messages = warning;
+SET row_security = off;
+
+SET default_tablespace = '';
+
+SET default_table_access_method = heap;
+
+--
+-- Name: alembic_version; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.alembic_version (
+    version_num character varying(32) NOT NULL
+);
+
+
+ALTER TABLE public.alembic_version OWNER TO postgres;
+
+--
+-- Name: course; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.course (
+    id integer NOT NULL,
+    title character varying NOT NULL,
+    credit character varying NOT NULL,
+    instructor_id integer
+);
+
+
+ALTER TABLE public.course OWNER TO postgres;
+
+--
+-- Name: course_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.course_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.course_id_seq OWNER TO postgres;
+
+--
+-- Name: course_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.course_id_seq OWNED BY public.course.id;
+
+
+--
+-- Name: grade; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.grade (
+    id integer NOT NULL,
+    score integer,
+    course_id integer,
+    student_id integer
+);
+
+
+ALTER TABLE public.grade OWNER TO postgres;
+
+--
+-- Name: grade_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.grade_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.grade_id_seq OWNER TO postgres;
+
+--
+-- Name: grade_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.grade_id_seq OWNED BY public.grade.id;
+
+
+--
+-- Name: instructor; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.instructor (
+    id integer NOT NULL,
+    name character varying NOT NULL,
+    email character varying,
+    image_link character varying
+);
+
+
+ALTER TABLE public.instructor OWNER TO postgres;
+
+--
+-- Name: instructor_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.instructor_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.instructor_id_seq OWNER TO postgres;
+
+--
+-- Name: instructor_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.instructor_id_seq OWNED BY public.instructor.id;
+
+
+--
+-- Name: student; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.student (
+    id integer NOT NULL,
+    name character varying NOT NULL,
+    email character varying,
+    image_link character varying
+);
+
+
+ALTER TABLE public.student OWNER TO postgres;
+
+--
+-- Name: student_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.student_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.student_id_seq OWNER TO postgres;
+
+--
+-- Name: student_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.student_id_seq OWNED BY public.student.id;
+
+
+--
+-- Name: course id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.course ALTER COLUMN id SET DEFAULT nextval('public.course_id_seq'::regclass);
+
+
+--
+-- Name: grade id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.grade ALTER COLUMN id SET DEFAULT nextval('public.grade_id_seq'::regclass);
+
+
+--
+-- Name: instructor id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.instructor ALTER COLUMN id SET DEFAULT nextval('public.instructor_id_seq'::regclass);
+
+
+--
+-- Name: student id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.student ALTER COLUMN id SET DEFAULT nextval('public.student_id_seq'::regclass);
+
+
+--
+-- Data for Name: alembic_version; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.alembic_version (version_num) FROM stdin;
+7fdc6d318117
+\.
+
+
+--
+-- Data for Name: course; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.course (id, title, credit, instructor_id) FROM stdin;
+101	Mathematics	3	2201
+102	English	3	2202
+103	Science	3	2203
+104	Physical Education	3	2204
+105	Social Studies	3	2205
+\.
+
+
+--
+-- Data for Name: grade; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.grade (id, score, course_id, student_id) FROM stdin;
+1	85	101	22001
+2	90	102	22002
+3	91	103	22003
+4	75	104	22004
+5	99	105	22005
+\.
+
+
+--
+-- Data for Name: instructor; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.instructor (id, name, email, image_link) FROM stdin;
+2201	Beau Olson	ut.nec.urna@instructor.com	https://cdn.pixabay.com/photo/2016/08/08/09/17/avatar-1577909_960_720.png
+2202	Susan Moreno	eros.non@instructor.com	https://cdn.pixabay.com/photo/2016/08/08/09/17/avatar-1577909_960_720.png
+2203	Preston Horne	cras.vehicula@instructor.com	https://cdn.pixabay.com/photo/2016/08/08/09/17/avatar-1577909_960_720.png
+2204	Demetrius Potter	at.arcu.vestibulum@instructor.com	https://cdn.pixabay.com/photo/2016/08/08/09/17/avatar-1577909_960_720.png
+2205	Luke Harrell	condimentum.eget@instructor.com	https://cdn.pixabay.com/photo/2016/08/08/09/17/avatar-1577909_960_720.png
+\.
+
+
+--
+-- Data for Name: student; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.student (id, name, email, image_link) FROM stdin;
+22001	Lunea Hicks	nullam@student.com	https://cdn.pixabay.com/photo/2016/08/08/09/17/avatar-1577909_960_720.png
+22002	Samuel Yates	dictum@student.com	https://cdn.pixabay.com/photo/2016/08/08/09/17/avatar-1577909_960_720.png
+22003	Cecilia Alford	aenean@student.com	https://cdn.pixabay.com/photo/2016/08/08/09/17/avatar-1577909_960_720.png
+22004	Paul Freeman	donec@student.com	https://cdn.pixabay.com/photo/2016/08/08/09/17/avatar-1577909_960_720.png
+22005	Roanna Chapman	erat@pstudent.com	https://cdn.pixabay.com/photo/2016/08/08/09/17/avatar-1577909_960_720.png
+22006	Bryar Gonzales	vitae.aliquet@student.com	https://cdn.pixabay.com/photo/2016/08/08/09/17/avatar-1577909_960_720.png
+22007	Laurel Richards	iaculis.odio.nam@student.com	https://cdn.pixabay.com/photo/2016/08/08/09/17/avatar-1577909_960_720.png
+22008	Nyssa Trujillo	mus@student.com	https://cdn.pixabay.com/photo/2016/08/08/09/17/avatar-1577909_960_720.png
+22009	Britanni Hooper	consectetuer@student.com	https://cdn.pixabay.com/photo/2016/08/08/09/17/avatar-1577909_960_720.png
+22100	Shay Padilla	lectus.quis@student.com	https://cdn.pixabay.com/photo/2016/08/08/09/17/avatar-1577909_960_720.png
+\.
+
+
+--
+-- Name: course_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.course_id_seq', 1, false);
+
+
+--
+-- Name: grade_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.grade_id_seq', 5, true);
+
+
+--
+-- Name: instructor_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.instructor_id_seq', 1, false);
+
+
+--
+-- Name: student_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.student_id_seq', 1, false);
+
+
+--
+-- Name: alembic_version alembic_version_pkc; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.alembic_version
+    ADD CONSTRAINT alembic_version_pkc PRIMARY KEY (version_num);
+
+
+--
+-- Name: course course_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.course
+    ADD CONSTRAINT course_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: course course_title_key; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.course
+    ADD CONSTRAINT course_title_key UNIQUE (title);
+
+
+--
+-- Name: grade grade_course_id_student_id_key; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.grade
+    ADD CONSTRAINT grade_course_id_student_id_key UNIQUE (course_id, student_id);
+
+
+--
+-- Name: grade grade_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.grade
+    ADD CONSTRAINT grade_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: instructor instructor_name_key; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.instructor
+    ADD CONSTRAINT instructor_name_key UNIQUE (name);
+
+
+--
+-- Name: instructor instructor_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.instructor
+    ADD CONSTRAINT instructor_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: student student_name_key; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.student
+    ADD CONSTRAINT student_name_key UNIQUE (name);
+
+
+--
+-- Name: student student_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.student
+    ADD CONSTRAINT student_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: course course_instructor_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.course
+    ADD CONSTRAINT course_instructor_id_fkey FOREIGN KEY (instructor_id) REFERENCES public.instructor(id);
+
+
+--
+-- Name: grade grade_course_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.grade
+    ADD CONSTRAINT grade_course_id_fkey FOREIGN KEY (course_id) REFERENCES public.course(id);
+
+
+--
+-- Name: grade grade_student_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.grade
+    ADD CONSTRAINT grade_student_id_fkey FOREIGN KEY (student_id) REFERENCES public.student(id);
+
+
+--
+-- PostgreSQL database dump complete
+--
+

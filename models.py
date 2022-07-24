@@ -3,10 +3,12 @@ from sqlalchemy import Column, String, Integer, ForeignKey, UniqueConstraint
 from sqlalchemy.orm import relationship
 
 from flask_sqlalchemy import SQLAlchemy
-import json
+from dotenv import load_dotenv
 
-DATABASE_URL = "postgresql://postgres@localhost:5432/cms_db"
-database_path = DATABASE_URL  # os.environ['DATABASE_URL']
+# Load environment variables from .env file
+load_dotenv()
+
+database_path = os.getenv('DATABASE_URL_MAIN')
 if database_path.startswith("postgres://"):
     database_path = database_path.replace("postgres://", "postgresql://", 1)
 
@@ -14,11 +16,13 @@ db = SQLAlchemy()
 
 
 def setup_db(app, database_path=database_path):
+    # format database_path:
+    # "postgresql://myusername:mypassword@localhost:5432/mydatabase"
     app.config["SQLALCHEMY_DATABASE_URI"] = database_path
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+    app.config["SECRET_KEY"] = os.getenv("SECRET_KEY")
     db.app = app
     db.init_app(app)
-    # db.create_all()
 
 
 # creates student table

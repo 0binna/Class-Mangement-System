@@ -8,20 +8,20 @@ AUTH0_DOMAIN = 'dev-nixmqqqv.us.auth0.com'
 ALGORITHMS = ['RS256']
 API_AUDIENCE = 'class_mgt'
 
-'''
-AuthError Exception
-A standardized way to communicate auth failure modes
-'''
-
 
 class AuthError(Exception):
+    '''
+    AuthError Exception
+    A standardized way to communicate auth failure modes
+    '''
+
     def __init__(self, error, status_code):
         self.error = error
         self.status_code = status_code
 
 
-# Auth header
 def get_token_auth_header():
+    # Auth header
     # Obtains the Access Token from the Authorization Header
     auth = request.headers.get('Authorization', None)
     # Attempts to get the header from the request. Raises an AuthError if no
@@ -61,15 +61,13 @@ def get_token_auth_header():
     return token
 
 
-'''
-check_permissions(permission, payload) method
-    @INPUTS
-            permission: string permission (i.e. 'get:students')
-            payload: decoded jwt payload
-'''
-
-
 def check_permissions(permission, payload):
+    '''
+    check_permissions(permission, payload) method
+        @INPUTS
+                permission: string permission (i.e. 'get:students')
+                payload: decoded jwt payload
+    '''
     # Raises an AuthError if permissions are not included in the payload
     if 'permissions' not in payload:
         raise AuthError({
@@ -89,14 +87,12 @@ def check_permissions(permission, payload):
     return True
 
 
-'''
-verify_decode_jwt(token) method
-    @INPUTS
-            token: a json web token (string)
-'''
-
-
 def verify_decode_jwt(token):
+    '''
+    verify_decode_jwt(token) method
+        @INPUTS
+                token: a json web token (string)
+    '''
     # Verifies the token using Auth0 /.well-known/jwks.json
     jsonurl = urlopen(f'https://{AUTH0_DOMAIN}/.well-known/jwks.json')
     jwks = json.loads(jsonurl.read())
@@ -160,14 +156,12 @@ def verify_decode_jwt(token):
     }, 400)
 
 
-'''
-@requires_auth(permission) decorator method
-    @INPUTS
-            permission: string permission (i.e. 'get:students')
-'''
-
-
 def requires_auth(permission=''):
+    '''
+    @requires_auth(permission) decorator method
+        @INPUTS
+                permission: string permission (i.e. 'get:students')
+    '''
     def requires_auth_decorator(f):
         @wraps(f)
         def wrapper(*args, **kwargs):
