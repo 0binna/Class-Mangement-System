@@ -8,7 +8,7 @@ from dotenv import load_dotenv
 # Load environment variables from .env file
 load_dotenv()
 
-database_path = os.getenv('DATABASE_URL_MAIN')
+database_path = os.getenv('DATABASE_URL')
 if database_path.startswith("postgres://"):
     database_path = database_path.replace("postgres://", "postgresql://", 1)
 

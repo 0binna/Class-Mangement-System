@@ -1,12 +1,17 @@
+import os
 import json
 from flask import request, _request_ctx_stack
 from functools import wraps
 from jose import jwt
 from urllib.request import urlopen
+from dotenv import load_dotenv
 
-AUTH0_DOMAIN = 'dev-nixmqqqv.us.auth0.com'
-ALGORITHMS = ['RS256']
-API_AUDIENCE = 'class_mgt'
+# Load environment variables from .env file
+load_dotenv()
+
+AUTH0_DOMAIN = os.getenv('AUTH0_DOMAIN')
+ALGORITHMS = os.getenv('ALGORITHMS')
+API_AUDIENCE = os.getenv('API_AUDIENCE')
 
 
 class AuthError(Exception):

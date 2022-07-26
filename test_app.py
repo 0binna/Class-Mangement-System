@@ -33,7 +33,7 @@ class CMStestCase(unittest.TestCase):
         self.client = self.app.test_client
         # format database_path:
         # "postgresql://myusername:mypassword@localhost:5432/mydatabase"
-        self.database_path = os.getenv("DATABASE_URL_TEST")
+        self.database_path = os.getenv("DATABASE_URL")
         setup_db(self.app, self.database_path)
 
         # binds the app to the current context

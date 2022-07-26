@@ -1,5 +1,4 @@
 .vscode
 __pycache__
 venv_cms/
-migrations/
 .env
