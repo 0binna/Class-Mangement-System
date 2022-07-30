@@ -60,7 +60,8 @@ class CMStestCase(unittest.TestCase):
 
     def test_404_get_students(self):
         # Test failure of endpoint with authentication beyond valid page
-        res = self.client().get("/students?page=1000", headers=admin_auth_header)
+        res = self.client().get("/students?page=1000",
+                                headers=admin_auth_header)
         data = json.loads(res.data)
 
         self.assertEqual(res.status_code, 404)
@@ -84,7 +85,8 @@ class CMStestCase(unittest.TestCase):
 
     def test_200_get_instructors(self):
         # Test success of endpoint with authentication
-        res = self.client().get("/instructors?page=1", headers=instructor_auth_header)
+        res = self.client().get("/instructors?page=1",
+                                headers=instructor_auth_header)
         data = json.loads(res.data)
 
         self.assertEqual(res.status_code, 200)
@@ -93,7 +95,8 @@ class CMStestCase(unittest.TestCase):
 
     def test_404_get_instructors(self):
         # Test failure of endpoint with authentication beyond valid page
-        res = self.client().get("/instructor?page=1000", headers=instructor_auth_header)
+        res = self.client().get("/instructor?page=1000",
+                                headers=instructor_auth_header)
         data = json.loads(res.data)
 
         self.assertEqual(res.status_code, 404)
@@ -192,7 +195,8 @@ class CMStestCase(unittest.TestCase):
 
     def test_400_search_students(self):
         # Test failure of endpoint with authentication and no input
-        res = self.client().post("/students/search", headers=instructor_auth_header)
+        res = self.client().post("/students/search",
+                                 headers=instructor_auth_header)
         data = json.loads(res.data)
 
         self.assertEqual(res.status_code, 400)
@@ -218,7 +222,8 @@ class CMStestCase(unittest.TestCase):
 
     def test_400_search_instructors(self):
         # Test failure of endpoint with authentication and no input
-        res = self.client().post("/instructors/search", headers=admin_auth_header)
+        res = self.client().post("/instructors/search",
+                                 headers=admin_auth_header)
         data = json.loads(res.data)
 
         self.assertEqual(res.status_code, 400)
@@ -383,7 +388,8 @@ class CMStestCase(unittest.TestCase):
 
     def test_200_delete_student(self):
         # Test success of endpoint with authentication
-        res = self.client().delete("/students/22005/student", headers=admin_auth_header)
+        res = self.client().delete("/students/22005/student",
+                                   headers=admin_auth_header)
         data = json.loads(res.data)
 
         self.assertEqual(res.status_code, 200)
@@ -392,7 +398,8 @@ class CMStestCase(unittest.TestCase):
     def test_422_delete_student(self):
         # Test failure of endpoint with authentication and delete student with
         # unknown ID
-        res = self.client().delete("/students/220/student", headers=admin_auth_header)
+        res = self.client().delete("/students/220/student",
+                                   headers=admin_auth_header)
         data = json.loads(res.data)
 
         self.assertEqual(res.status_code, 422)
