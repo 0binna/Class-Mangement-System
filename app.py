@@ -1,22 +1,10 @@
 import os
-import json
-import requests
 from flask import Flask, request, abort, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
 
 from models import setup_db, Student, Instructor, Course, Grade
 from auth import AuthError, requires_auth
-
-
-def get_error_message(error):
-    # Returns default error description or custom error message (if not applicable)
-    try:
-        # Return message contained in error
-        return error.description['message']
-    except:
-        # otherwise, return given default text
-        return error.description
 
 
 data_per_page = 10
@@ -61,25 +49,24 @@ def create_app(test_config=None):
     @requires_auth("get:students")
     # Handles GET requests for all student records including pagination (every
     # 10 students)
-    def retrieve_students(token):
+    def retrieve_students(payload):
         selection = Student.query.order_by(Student.name).all()
         students = paginate_data(request, selection)
 
         if len(students) == 0:
-            abort(404, {'message': 'No student found'})
+            abort(404)
 
         return jsonify(
             {
                 "success": True,
-                "students": students,
-                "total_students": len(Student.query.all())
+                "students": students
             }
         )
 
     @app.route("/students/<int:student_id>")
-    @requires_auth("get:student-profile")
-    # Handles GET requests GET requests to retrieve student details using a student ID.
-    def retrieve_student_details(token, student_id):
+    @requires_auth("get:student_profile")
+    # Handles GET requests for students using a student ID.
+    def retrieve_student_details(payload, student_id):
         try:
             student = Student.query.get(student_id)
 
@@ -103,48 +90,12 @@ def create_app(test_config=None):
             )
 
         except BaseException:
-            abort(404, {'message': 'Student not found'})
-
-    @app.route("/students/myProfile")
-    @requires_auth("get:my-student-profile")
-    # Handles GET requests to retrieve signed-in student details.
-    def retrieve_signedIn_student_details(token):
-        # Retrieves signed-in student's email address from Auth0 /userinfo API
-        res = requests.get(
-            "https://dev-nixmqqqv.us.auth0.com/userinfo", headers={"Authorization": f"Bearer {token}"})
-        data = res.json()
-        student_email = data["email"]
-
-        try:
-            student = Student.query.filter(
-                Student.email == student_email).one_or_none()
-
-            course_score = []
-            for grade in student.grades:
-                course_score.append(
-                    {
-                        "course": grade.course.title,
-                        "score": grade.score
-                    }
-                )
-
-            student_details = student.long()
-            student_details.update({"grades": course_score})
-
-            return jsonify(
-                {
-                    "success": True,
-                    "student_details": student_details
-                }
-            )
-
-        except BaseException:
-            abort(404, {'message': 'Student not found'})
+            abort(404)
 
     @app.route("/students/<int:student_id>/course", methods=['POST'])
-    @requires_auth("enroll:student-course")
-    # Handles POST requests to add student to course
-    def add_student_course(token, student_id):
+    @requires_auth("post:student_create")
+    # Handles POST requests to create a new course for a student
+    def add_student_course(payload, student_id):
 
         body = request.get_json()
 
@@ -152,7 +103,7 @@ def create_app(test_config=None):
         course = Course.query.filter(
             Course.title.ilike(course_input)).one_or_none()
         if course is None:
-            abort(404, {'message': 'Course not found'})
+            abort(404)
 
         try:
             add_course = Grade(
@@ -168,13 +119,13 @@ def create_app(test_config=None):
             )
 
         except BaseException:
-            abort(422, {'message': 'Student is already enrolled in course'})
+            abort(422)
 
     @app.route("/students", methods=['POST'])
-    @requires_auth("search:student")
+    @requires_auth("post:student_search")
     # Handles POST requests to get student records based on search term.
     # Search allows partial string matching and case-insensitive.
-    def search_students(token):
+    def search_students(payload):
         try:
             body = request.get_json()
 
@@ -195,9 +146,9 @@ def create_app(test_config=None):
             abort(400)
 
     @app.route("/students/<int:student_id>/score", methods=['PATCH'])
-    @requires_auth("update:student-score")
+    @requires_auth("patch:student_edit")
     # Handles PATCH requests to update students score.
-    def update_student_grade(token, student_id):
+    def update_student_grade(payload, student_id):
         try:
             body = request.get_json()
 
@@ -218,12 +169,12 @@ def create_app(test_config=None):
             )
 
         except BaseException:
-            abort(422, {'message': 'Invalid student ID'})
+            abort(422)
 
     @app.route("/students/<int:student_id>", methods=["DELETE"])
-    @requires_auth("delete:student")
+    @requires_auth("delete:student_id")
     # Handles DELETE requests to delete student record.
-    def delete_student(token, student_id):
+    def delete_student(payload, student_id):
         try:
             student = Student.query.filter(
                 Student.id == student_id).one_or_none()
@@ -238,12 +189,12 @@ def create_app(test_config=None):
             )
 
         except BaseException:
-            abort(422, {'message': 'Student not found'})
+            abort(422)
 
     @app.route("/students/<int:student_id>/course", methods=["DELETE"])
-    @requires_auth("unenroll:student-course")
-    # Handles DELETE requests to un-enroll student from course.
-    def delete_student_course(token, student_id):
+    @requires_auth("delete:student_course")
+    # Handles DELETE requests to unenroll student from course.
+    def delete_student_course(payload, student_id):
         try:
             body = request.get_json()
 
@@ -264,7 +215,7 @@ def create_app(test_config=None):
             )
 
         except BaseException:
-            abort(422, {'message': 'Student not enrolled in course'})
+            abort(422)
 
     # ----------------------------------------------------------------------#
     # Instructors
@@ -274,25 +225,24 @@ def create_app(test_config=None):
     @requires_auth("get:instructors")
     # Handles GET requests for all instructor records including pagination
     # (every 10 instructors)
-    def retrieve_instructors(token):
+    def retrieve_instructors(payload):
         selection = Instructor.query.order_by(Instructor.name).all()
         instructors = paginate_data(request, selection)
 
         if len(instructors) == 0:
-            abort(404, {'message': 'No instructor found'})
+            abort(404)
 
         return jsonify(
             {
                 "success": True,
-                "instructors": instructors,
-                "total_instructors": len(Instructor.query.all())
+                "instructors": instructors
             }
         )
 
     @app.route("/instructors/<int:instructor_id>")
-    @requires_auth("get:instructor-profile")
+    @requires_auth("get:instructor_profile")
     # Handles GET requests for instructors using an instructor ID.
-    def retrieve_instructor_details(token, instructor_id):
+    def retrieve_instructor_details(payload, instructor_id):
         try:
             instructor = Instructor.query.get(instructor_id)
 
@@ -315,13 +265,13 @@ def create_app(test_config=None):
             )
 
         except BaseException:
-            abort(404, {'message': 'Instructor not found'})
+            abort(404)
 
     @app.route("/instructors", methods=['POST'])
-    @requires_auth("search:instructor")
+    @requires_auth("post:instructor_search")
     # Handles POST requests to get instructor records based on search term.
     # Search allows partial string matching and case-insensitive.
-    def search_instructors(token):
+    def search_instructors(payload):
         try:
             body = request.get_json()
 
@@ -351,7 +301,7 @@ def create_app(test_config=None):
         return jsonify({
             "success": False,
             "error": 400,
-            "message": get_error_message(error)
+            "message": "bad request"
         }), 400
 
     @app.errorhandler(422)
@@ -359,15 +309,15 @@ def create_app(test_config=None):
         return jsonify({
             "success": False,
             "error": 422,
-            "message": get_error_message(error)
+            "message": "unprocessable"
         }), 422
 
     @app.errorhandler(404)
-    def notFound(error):
+    def unprocessable(error):
         return jsonify({
             "success": False,
             "error": 404,
-            "message": get_error_message(error)
+            "message": "resource not found"
         }), 404
 
     @app.errorhandler(AuthError)
