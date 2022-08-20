@@ -61,7 +61,8 @@ def create_app(test_config=None):
         return jsonify(
             {
                 "success": True,
-                "students": students
+                "students": students,
+                "total_students": len(Student.query.all())
             }
         )
 
@@ -273,7 +274,8 @@ def create_app(test_config=None):
         return jsonify(
             {
                 "success": True,
-                "instructors": instructors
+                "instructors": instructors,
+                "total_instructors": len(Instructor.query.all())
             }
         )
 
