@@ -120,7 +120,7 @@ def verify_decode_jwt(token):
                 'e': key['e']
             }
 
-    # Decodes the payload from the token, vlidates the claims and returns the
+    # Decodes the payload from the token, validates the claims and returns the
     # decoded payload
     if rsa_key:
         try:
@@ -179,7 +179,7 @@ def requires_auth(permission=''):
             check_permissions(permission, payload)
             # Returns the decorator which passes the decoded payload to the
             # decorated method
-            return f(payload, *args, **kwargs)
+            return f(token, *args, **kwargs)
 
         return wrapper
     return requires_auth_decorator
