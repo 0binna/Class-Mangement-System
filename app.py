@@ -363,7 +363,7 @@ def create_app(test_config=None):
         }), 422
 
     @app.errorhandler(404)
-    def unprocessable(error):
+    def notFound(error):
         return jsonify({
             "success": False,
             "error": 404,
