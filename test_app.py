@@ -66,7 +66,7 @@ class CMStestCase(unittest.TestCase):
 
         self.assertEqual(res.status_code, 404)
         self.assertEqual(data["success"], False)
-        self.assertEqual(data["message"], "resource not found")
+        self.assertEqual(data["message"], "No student found")
 
     def test_401_get_students(self):
         # Test RBAC (Admin role) without authentication
@@ -95,13 +95,13 @@ class CMStestCase(unittest.TestCase):
 
     def test_404_get_instructors(self):
         # Test failure of endpoint with authentication beyond valid page
-        res = self.client().get("/instructor?page=1000",
+        res = self.client().get("/instructors?page=1000",
                                 headers=instructor_auth_header)
         data = json.loads(res.data)
 
         self.assertEqual(res.status_code, 404)
         self.assertEqual(data["success"], False)
-        self.assertEqual(data["message"], "resource not found")
+        self.assertEqual(data["message"], "No instructor found")
 
     def test_401_get_instructor(self):
         # Test RBAC (Instructor role) without authentication
@@ -136,7 +136,7 @@ class CMStestCase(unittest.TestCase):
 
         self.assertEqual(res.status_code, 404)
         self.assertEqual(data["success"], False)
-        self.assertEqual(data["message"], "resource not found")
+        self.assertEqual(data["message"], "Student not found")
 
     def test_401_get_student_details(self):
         # Test RBAC (Student role) without authentication
@@ -168,13 +168,13 @@ class CMStestCase(unittest.TestCase):
                 list))
 
     def test_404_get_instructor_details(self):
-        # Test failure of endpoint with authentication and unknow instructor ID
-        res = self.client().get("/instructor/3000", headers=admin_auth_header)
+        # Test failure of endpoint with authentication and unknown instructor ID
+        res = self.client().get("/instructors/3000", headers=admin_auth_header)
         data = json.loads(res.data)
 
         self.assertEqual(res.status_code, 404)
         self.assertEqual(data["success"], False)
-        self.assertEqual(data["message"], "resource not found")
+        self.assertEqual(data["message"], "Instructor not found")
 
     # ----------------------------------------------------------------------#
     # Tests POST/students
@@ -200,7 +200,6 @@ class CMStestCase(unittest.TestCase):
 
         self.assertEqual(res.status_code, 400)
         self.assertEqual(data["success"], False)
-        self.assertEqual(data["message"], "bad request")
 
     # ----------------------------------------------------------------------#
     # Tests POST/instructors
@@ -226,7 +225,6 @@ class CMStestCase(unittest.TestCase):
 
         self.assertEqual(res.status_code, 400)
         self.assertEqual(data["success"], False)
-        self.assertEqual(data["message"], "bad request")
 
     # ----------------------------------------------------------------------#
     # Tests POST/students/<int:student_id>/course
@@ -257,7 +255,7 @@ class CMStestCase(unittest.TestCase):
 
         self.assertEqual(res.status_code, 404)
         self.assertEqual(data["success"], False)
-        self.assertEqual(data["message"], "resource not found")
+        self.assertEqual(data["message"], "Course not found")
 
     def test_422_add_student_course(self):
         # Test failure of endpoint with authentication and enrolling student in
@@ -271,7 +269,8 @@ class CMStestCase(unittest.TestCase):
 
         self.assertEqual(res.status_code, 422)
         self.assertEqual(data["success"], False)
-        self.assertEqual(data["message"], "unprocessable")
+        self.assertEqual(
+            data["message"], "Student is already enrolled in course")
 
     def test_403_search_students(self):
         # Test RBAC (Student role) without authorization
@@ -319,7 +318,7 @@ class CMStestCase(unittest.TestCase):
 
         self.assertEqual(res.status_code, 422)
         self.assertEqual(data["success"], False)
-        self.assertEqual(data["message"], "unprocessable")
+        self.assertEqual(data["message"], "Invalid student ID")
 
     def test_403_update_student_grade(self):
         # Test RBAC (Instructor role) without authorization
@@ -365,7 +364,7 @@ class CMStestCase(unittest.TestCase):
 
         self.assertEqual(res.status_code, 422)
         self.assertEqual(data["success"], False)
-        self.assertEqual(data["message"], "unprocessable")
+        self.assertEqual(data["message"], "Student not enrolled in course")
 
     def test_403_delete_student_course(self):
         # Test RBAC (Student role) without authorization
@@ -401,7 +400,7 @@ class CMStestCase(unittest.TestCase):
 
         self.assertEqual(res.status_code, 422)
         self.assertEqual(data["success"], False)
-        self.assertEqual(data["message"], "unprocessable")
+        self.assertEqual(data["message"], "Student not found")
 
     def test_403_delete_student(self):
         # Test RBAC (Admin role) without authorization

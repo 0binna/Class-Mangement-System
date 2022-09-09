@@ -9,6 +9,16 @@ from models import setup_db, Student, Instructor, Course, Grade
 from auth import AuthError, requires_auth
 
 
+def get_error_message(error):
+    # Returns default error description or custom error message (if not applicable)
+    try:
+        # Return message contained in error
+        return error.description['message']
+    except:
+        # otherwise, return given default text
+        return error.description
+
+
 data_per_page = 10
 
 
@@ -56,7 +66,7 @@ def create_app(test_config=None):
         students = paginate_data(request, selection)
 
         if len(students) == 0:
-            abort(404)
+            abort(404, {'message': 'No student found'})
 
         return jsonify(
             {
@@ -67,8 +77,8 @@ def create_app(test_config=None):
         )
 
     @app.route("/students/<int:student_id>")
-    @requires_auth("get:student_profile")
-    # Handles GET requests for students using a student ID.
+    @requires_auth("get:student-profile")
+    # Handles GET requests GET requests to retrieve student details using a student ID.
     def retrieve_student_details(token, student_id):
         try:
             student = Student.query.get(student_id)
@@ -93,7 +103,7 @@ def create_app(test_config=None):
             )
 
         except BaseException:
-            abort(404)
+            abort(404, {'message': 'Student not found'})
 
     @app.route("/students/myProfile")
     @requires_auth("get:my-student-profile")
@@ -129,7 +139,7 @@ def create_app(test_config=None):
             )
 
         except BaseException:
-            abort(404)
+            abort(404, {'message': 'Student not found'})
 
     @app.route("/students/<int:student_id>/course", methods=['POST'])
     @requires_auth("enroll:student-course")
@@ -142,7 +152,7 @@ def create_app(test_config=None):
         course = Course.query.filter(
             Course.title.ilike(course_input)).one_or_none()
         if course is None:
-            abort(404)
+            abort(404, {'message': 'Course not found'})
 
         try:
             add_course = Grade(
@@ -158,7 +168,7 @@ def create_app(test_config=None):
             )
 
         except BaseException:
-            abort(422)
+            abort(422, {'message': 'Student is already enrolled in course'})
 
     @app.route("/students", methods=['POST'])
     @requires_auth("post:student_search")
@@ -208,7 +218,7 @@ def create_app(test_config=None):
             )
 
         except BaseException:
-            abort(422)
+            abort(422, {'message': 'Invalid student ID'})
 
     @app.route("/students/<int:student_id>", methods=["DELETE"])
     @requires_auth("delete:student_id")
@@ -228,7 +238,7 @@ def create_app(test_config=None):
             )
 
         except BaseException:
-            abort(422)
+            abort(422, {'message': 'Student not found'})
 
     @app.route("/students/<int:student_id>/course", methods=["DELETE"])
     @requires_auth("unenroll:student-course")
@@ -254,7 +264,7 @@ def create_app(test_config=None):
             )
 
         except BaseException:
-            abort(422)
+            abort(422, {'message': 'Student not enrolled in course'})
 
     # ----------------------------------------------------------------------#
     # Instructors
@@ -269,7 +279,7 @@ def create_app(test_config=None):
         instructors = paginate_data(request, selection)
 
         if len(instructors) == 0:
-            abort(404)
+            abort(404, {'message': 'No instructor found'})
 
         return jsonify(
             {
@@ -305,7 +315,7 @@ def create_app(test_config=None):
             )
 
         except BaseException:
-            abort(404)
+            abort(404, {'message': 'Instructor not found'})
 
     @app.route("/instructors", methods=['POST'])
     @requires_auth("post:instructor_search")
@@ -341,7 +351,7 @@ def create_app(test_config=None):
         return jsonify({
             "success": False,
             "error": 400,
-            "message": "bad request"
+            "message": get_error_message(error)
         }), 400
 
     @app.errorhandler(422)
@@ -349,7 +359,7 @@ def create_app(test_config=None):
         return jsonify({
             "success": False,
             "error": 422,
-            "message": "unprocessable"
+            "message": get_error_message(error)
         }), 422
 
     @app.errorhandler(404)
@@ -357,7 +367,7 @@ def create_app(test_config=None):
         return jsonify({
             "success": False,
             "error": 404,
-            "message": "resource not found"
+            "message": get_error_message(error)
         }), 404
 
     @app.errorhandler(AuthError)
